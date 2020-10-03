@@ -1,0 +1,110 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de comunidades</title>
+</h:head>
+<h:body>
+	
+	<h1>Comunidades:</h1>
+	
+<h:form id="form-comunidad">
+		<p:growl id="growl" life="2000" />
+		<p:panelGrid id="panel-comunidad" columns="4" style="#{ComunidadView.stylePanelComunidad}" >
+
+			<p:outputLabel for="input-nombre" value="Nombre: "/>
+			<p:inputText id="input-nombre" value="#{ComunidadView.comunidad.nombre}" />
+
+			<p:outputLabel for="input-descripcion" value="Descripcion: "/>
+			<p:inputText id="input-descripcion" value="#{ComunidadView.comunidad.descripcion}" />
+			<p:outputLabel for="input-tema" value="Tema: "/>
+			<p:inputText id="input-tema" value="#{ComunidadView.comunidad.tema}" />
+			
+			<p:outputLabel for="input-fechaCreacion" value="Fecha de creacion: "/>
+			<p:datePicker id="input-fechaCreacion" value="#{ComunidadView.comunidad.fechaCreacion}" />
+
+		</p:panelGrid>
+		
+		<p:panelGrid id="panel-search" columns = "4" style="#{ClienteView.styleTableComunidad}">
+		<p:outputLabel for="input-nombre" value="Nombre: "/>
+		<p:inputText id="input-nombre" value="#{ComunidadView.ClienteSearch.nombre}" />
+		<p:commandButton value="Buscar" icon="pi pi-search" 
+			actionListener="#{ComunidadView.searchComunidad()}"
+			update = "@form"/>
+		<p:commandButton value="Limpiar" icon="pi pi-refresh" 
+			actionListener="#{ComunidadView.cleanComunidad()}"
+			update = "@form"/>
+			
+		</p:panelGrid>
+		
+		<p:dataTable var="table-comunidad" value="#{ComunidadView.comunidades}" var = "comunidad"
+		paginator = "true" rows="5" paginatorPosition="bottom"
+		selectionMode="single" rowKey="#{cliente.id}"
+		Style ="#{ComunidadView.styleTableComunidad}"emptyMessage="No hay clientes encontrados">
+		
+		
+		<p:ajax event="rowSelect" listener="#{ComunidadView.selectComunidad}" update="@form" />
+		<p:ajax event="rowUnselect" listener="#{ComunidadView.unselectComunidad}" update="@form" />
+		
+		<p:column headerText="Id">
+			<h:outputText value="#{comunidad.id}" />
+		</p:column>
+
+		<p:column headerText="Nombre">
+			<h:outputText value="#{comunidad.nombre}" />
+		</p:column>
+
+		<p:column headerText="Descripcion">
+			<h:outputText value="#{comunidad.descripcion}" />
+		</p:column>
+
+		<p:column headerText="Tema">
+			<h:outputText value="#{comunidad.tema}" />
+		</p:column>
+
+		<p:column headerText="Fecha Creacion">
+			<h:outputText value="#{comunidad.fechaCreacion}" />
+		</p:column>
+		</p:dataTable>
+		
+		<p:toolbar id="toolbar-comunidad">
+		<f:facet name = "left">
+			<p:commandButton value="Nuevo" icon="pi pi-file" disabled="#{ComunidadView.disabledButtonNuevo}"
+			actionListener="#{ComunidadView.newComunidad()}"
+			update = "@form"/>
+			
+			<p:commandButton value="Grabar" icon="pi pi-save" disabled="#{ComunidadView.disabledButtonGrabar}"
+			actionListener="#{ComunidadView.saveComunidad()}"
+			update = "@form"/>
+			
+			<p:commandButton value="Cancelar" icon="pi pi-times" disabled="#{ComunidadView.disabledButtonCancelar}"
+			actionListener="#{ComunidadView.saveComunidad()}"
+			update = "@form"/>
+			
+			<p:commandButton value="Editar" icon="pi pi-pencil" disabled="#{ComunidadView.disabledButtonEditar}"
+			actionListener="#{ComunidadView.editComunidad()}"
+			update = "@form"/>
+			
+			<p:commandButton value="Eliminar" icon="pi pi-trash" disabled="#{ComunidadView.disabledButtonEliminar}"
+			actionListener="#{ComunidadView.deleteComunidad()}"
+			update = "form-comunidad: table-comunidad: form-comunidad: toolbar-comunidad"/>
+			
+			<p:confirm header = "Confirmacion" message= "¿Deseas eliminar la comunidad #{ComunidadView.messageConfirmDialog}?" 
+			icon ="pi pi-exclamation-triangle"/>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        		<p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+        		<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+    		</p:confirmDialog>    
+			
+		</f:facet>
+		</p:toolbar>
+		
+		
+		</h:form>
+
+	
+</h:body>
+</html>
