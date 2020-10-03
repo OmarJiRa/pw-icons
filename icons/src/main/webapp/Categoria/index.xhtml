@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de categorias</title>
+</h:head>
+
+<h:body>
+
+	<p:breadCrumb>
+		<p:menuitem value="Videojuegos" url="#" />
+		<p:menuitem value="EA Sports" url="#" />
+		<p:menuitem value="Noticias" url="#" />
+		<p:menuitem value="Cocina" url="#" />
+		<p:menuitem value="Covid19" url="#" />
+		<p:menuitem value="Fútbol" url="#" />
+		<p:menuitem value="Ropa" url="#" />
+		<p:menuitem value="Comida" url="#" />
+	</p:breadCrumb>
+
+	<h1>Categorias:</h1>
+
+	<p:dataTable var="categoria" value="#{dtCategoriaView.categorias}">
+		<p:column headerText="Id">
+			<h:outputText value="#{categoria.id}" />
+		</p:column>
+
+		<p:column headerText="Nombre">
+			<h:outputText value="#{categoria.nombre}" />
+		</p:column>
+
+		<p:column headerText="Descripción">
+			<h:outputText value="#{categoria.descripcion}" />
+		</p:column>
+
+		<p:column headerText="Posts">
+			<h:outputText value="#{categoria.posts}" />
+		</p:column>
+
+	</p:dataTable>
+
+</h:body>
+</html>
