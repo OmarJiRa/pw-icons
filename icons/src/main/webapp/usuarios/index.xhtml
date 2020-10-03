@@ -5,49 +5,188 @@
 
 <h:head>
 	<title>Lista de usuarios</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<link rel="stylesheet"
+		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+		crossorigin="anonymous"></link>
 </h:head>
 
-<h:body>
-
-	<p:breadCrumb>
-		<p:menuitem value="Categories" url="#" />
-		<p:menuitem value="Sports" url="#" />
-		<p:menuitem value="Basketball" url="#" />
-		<p:menuitem value="NBA" url="#" />
-		<p:menuitem value="Teams" url="#" />
-		<p:menuitem value="L.A. Lakers" url="#" />
-		<p:menuitem value="Roster" url="#" />
-		<p:menuitem value="Kobe Bryant" url="#" />
-	</p:breadCrumb>
-
-	<h1>Usuarios:</h1>
-
-	<p:dataTable var="usuario" value="#{dtUsuarioView.usuarios}">
-		<p:column headerText="Id">
-			<h:outputText value="#{usuario.id}" />
-		</p:column>
-
-		<p:column headerText="Nombres y Apellidos">
-			<h:outputText value="#{usuario.nombresApellidos}" />
-		</p:column>
-
-		<p:column headerText="Correo electrónico">
-			<h:outputText value="#{usuario.email}" />
-		</p:column>
-
-		<p:column headerText="Direccion">
-			<h:outputText value="#{usuario.direccion}" />
-		</p:column>
-
-		<p:column headerText="Telefono">
-			<h:outputText value="#{usuario.telefono}" />
-		</p:column>
+<h:body class="bg-light">
 
 
+	<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+		
+		<a class="navbar-brand" href="/iEdunet"><h1 style="color:white">Icons</h1></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarNav" aria-controls="navbarNav"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ml-2">
+				<li class="nav-item"><a class="nav-link h4" href="/icons" style="color:white">Inicio
+				</a></li>
+				<li class="nav-item active"><a class="nav-link h4"
+					href="/icons/usuarios/" style="color:white">Usuarios </a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/creadores/" style="color:white">Creadores</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/posts/" style="color:white">Posts</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/comunidades" style="color:white">Comunidades</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/categorias" style="color:white">Categorias</a></li>
 
-	</p:dataTable>
+				<p:commandButton style="text-align:right" value="Register"
+					icon="pi pi-user-plus" />
+				<p:commandButton style="text-align:right" value="Log In"
+					icon="pi pi-id-card" />
+
+			</ul>
+		</div>
+	</nav>
+
+	<h:form id="form-usuario" class="row justify-content-center mt-3">
+
+		<p:growl id="growl" life="2000" />
+		<p:panelGrid id="panel-usuario" columns="4"
+			style="#{usuarioView.stylePanelUsuario}">
+			<p:outputLabel for="input-nombresApellidos"
+				value="Nombres y Apellidos :" />
+			<p:inputText id="input-nombresApellidos"
+				value="#{usuarioView.usuario.nombresApellidos}" />
+			<p:outputLabel for="input-numeroDocumento"
+				value="Número de documento :" />
+			<p:inputText id="input-numeroDocumento"
+				value="#{usuarioView.usuario.numeroDocumento}" />
+			<p:outputLabel for="input-direccion" value="Dirección :" />
+
+			<p:inputText id="input-direccion"
+				value="#{usuarioView.usuario.direccion}" />
+
+			<p:outputLabel for="input-telefono" value="Teléfono :" />
+			<p:inputText id="input-telefono"
+				value="#{usuarioView.usuario.telefono}" />
+			<p:outputLabel for="input-email" value="E-mail :" />
+			<p:inputText id="input-email" value="#{usuarioView.usuario.email}" />
 
 
+		</p:panelGrid>
 
+		<p:panelGrid id="panel-search" columns="4"
+			style="#{usuarioView.styleTableUsuario}">
+			<p:outputLabel for="input-search-nombresApellidos"
+				value="Nombres y Apellidos :" />
+			<p:inputText id="input-search-nombresApellidos"
+				value="#{usuarioView.usuarioSearch.nombresApellidos}" />
+			<p:commandButton value="Buscar" icon="pi pi-search"
+				actionListener="#{usuarioView.findByNombresApellidos()}"
+				update=":form-usuario:table-usuario :form-usuario:toolbar-usuario" />
+			<p:commandButton value="Limpiar" icon="pi pi-refresh"
+				actionListener="#{usuarioView.cleanByNombresApellidos()}"
+				update="@form" />
+
+			<p:outputLabel for="input-search-numeroDocumento"
+				value="Número de documento :" />
+			<p:inputText id="input-search-numeroDocumento"
+				value="#{usuarioView.usuarioSearch.numeroDocumento}" />
+			<p:commandButton value="Buscar" icon="pi pi-search"
+				actionListener="#{usuarioView.findByNumeroDocumento()}"
+				update=":form-usuario:table-usuario :form-usuario:toolbar-usuario" />
+			<p:commandButton value="Limpiar" icon="pi pi-refresh"
+				actionListener="#{usuarioView.cleanByNumeroDocumento()}"
+				update="@form" />
+		</p:panelGrid>
+
+		<p:dataTable id="table-usuario" value="#{usuarioView.usuarios}"
+			var="usuario" paginator="true" rows="5" paginatorPosition="bottom"
+			selectionMode="single" rowKey="#{usuario.id}"
+			style="#{usuarioView.styleTableUsuario}"
+			emptyMessage="No se encontraron usuarios">
+
+			<p:ajax event="rowSelect" listener="#{usuarioView.selectUsuario}"
+				update="@form" />
+			<p:ajax event="rowUnselect" listener="#{usuarioView.unselectUsuario}"
+				update="@form" />
+
+			<p:column headerText="Id">
+				<h:outputText value="#{usuario.id}" />
+			</p:column>
+
+			<p:column headerText="Nombres y Apellidos">
+				<h:outputText value="#{usuario.nombresApellidos}" />
+			</p:column>
+
+			<p:column headerText="Correo electrónico">
+				<h:outputText value="#{usuario.email}" />
+			</p:column>
+
+			<p:column headerText="Numero de documento">
+				<h:outputText value="#{usuario.numeroDocumento}" />
+			</p:column>
+
+			<p:column headerText="Direccion">
+				<h:outputText value="#{usuario.direccion}" />
+			</p:column>
+
+			<p:column headerText="Telefono">
+				<h:outputText value="#{usuario.telefono}" />
+			</p:column>
+
+		</p:dataTable>
+
+		<p:toolbar id="toolbar-usuario">
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file"
+					disabled="#{usuarioView.disabledButtonNuevo}"
+					actionListener="#{usuarioView.newUsuario()}" update="@form" />
+
+				<p:commandButton value="Grabar" icon="pi pi-save"
+					disabled="#{usuarioView.disabledButtonGrabar}"
+					actionListener="#{usuarioView.saveUsuario()}" update="@form" />
+				<p:commandButton value="Cancelar" icon="pi pi-times"
+					disabled="#{usuarioView.disabledButtonCancelar}"
+					actionListener="#{usuarioView.cancelUsuario()}" update="@form" />
+
+				<p:commandButton value="Editar" icon="pi pi-pencil"
+					disabled="#{usuarioView.disabledButtonEditar}"
+					actionListener="#{usuarioView.editUsuario()}" update="@form" />
+
+				<p:commandButton value="Eliminar" icon="pi pi-trash"
+					disabled="#{usuarioView.disabledButtonEliminar}"
+					actionListener="#{usuarioView.deleteUsuario()}"
+					update=":form-usuario:table-usuario :form-usuario:toolbar-usuario">
+					<p:confirm header="Confirmación"
+						message="Estas seguro que deseas elimininar a: #{usuarioView.messageConfirmDialog}?"
+						icon="pi pi-exclamation-triangle" />
+				</p:commandButton>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
+
+
+			</f:facet>
+		</p:toolbar>
+
+	</h:form>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+		integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+		integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+		crossorigin="anonymous"></script>
 </h:body>
 </html>

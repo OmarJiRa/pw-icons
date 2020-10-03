@@ -1,0 +1,166 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de comunidades</title>
+	
+	<meta charset="utf-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<link rel="stylesheet"
+		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+		crossorigin="anonymous"></link>
+</h:head>
+<h:body class="bg-light">
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+
+		<a class="navbar-brand" href="/icons	"><h1 style="color: white">Icons</h1></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarNav" aria-controls="navbarNav"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ml-2">
+				<li class="nav-item"><a class="nav-link h4" href="/icons"
+					style="color: white">Inicio </a></li>
+				<li class="nav-item active"><a class="nav-link h4"
+					href="/icons/categorias/" style="color: white">Usuarios </a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/creadores/" style="color: white">Creadores</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/posts/" style="color: white">Posts</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/comunidades" style="color: white">Comunidades</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/categorias" style="color: white">Categorias</a></li>
+
+				<p:commandButton style="text-align:right" value="Register"
+					icon="pi pi-user-plus" />
+				<p:commandButton style="text-align:right" value="Log In"
+					icon="pi pi-id-card" />
+
+			</ul>
+		</div>
+	</nav>
+
+	<h:form id="form-comunidad">
+		<p:growl id="growl" life="2000" />
+		<p:panelGrid id="panel-comunidad" columns="4"
+			style="#{ComunidadView.stylePanelComunidad}">
+
+			<p:outputLabel for="input-nombre" value="Nombre: " />
+			<p:inputText id="input-nombre"
+				value="#{ComunidadView.comunidad.nombre}" />
+
+			<p:outputLabel for="input-descripcion" value="Descripcion: " />
+			<p:inputText id="input-descripcion"
+				value="#{ComunidadView.comunidad.descripcion}" />
+			<p:outputLabel for="input-tema" value="Tema: " />
+			<p:inputText id="input-tema" value="#{ComunidadView.comunidad.tema}" />
+
+			<p:outputLabel for="input-fechaCreacion" value="Fecha de creacion: " />
+			<p:datePicker id="input-fechaCreacion"
+				value="#{ComunidadView.comunidad.fechaCreacion}" />
+
+		</p:panelGrid>
+
+		<p:panelGrid id="panel-search" columns="4"
+			style="#{ClienteView.styleTableComunidad}">
+			<p:outputLabel for="input-nombreC" value="Nombre: " />
+			<p:inputText id="input-nombreC"
+				value="#{ComunidadView.ClienteSearch.nombre}" />
+			<p:commandButton value="Buscar" icon="pi pi-search"
+				actionListener="#{ComunidadView.searchComunidad()}" update="@form" />
+			<p:commandButton value="Limpiar" icon="pi pi-refresh"
+				actionListener="#{ComunidadView.cleanComunidad()}" update="@form" />
+
+		</p:panelGrid>
+
+		<p:dataTable id="table-comunidad" value="#{ComunidadView.comunidades}"
+			var="comunidad" paginator="true" rows="5" paginatorPosition="bottom"
+			selectionMode="single" rowKey="#{cliente.id}"
+			Style="#{ComunidadView.styleTableComunidad}"
+			emptyMessage="No hay clientes encontrados">
+
+
+			<p:ajax event="rowSelect" listener="#{ComunidadView.selectComunidad}"
+				update="@form" />
+			<p:ajax event="rowUnselect"
+				listener="#{ComunidadView.unselectComunidad}" update="@form" />
+
+			<p:column headerText="Id">
+				<h:outputText value="#{comunidad.id}" />
+			</p:column>
+
+			<p:column headerText="Nombre">
+				<h:outputText value="#{comunidad.nombre}" />
+			</p:column>
+
+			<p:column headerText="Descripcion">
+				<h:outputText value="#{comunidad.descripcion}" />
+			</p:column>
+
+			<p:column headerText="Tema">
+				<h:outputText value="#{comunidad.tema}" />
+			</p:column>
+
+			<p:column headerText="Fecha Creacion">
+				<h:outputText value="#{comunidad.fechaCreacion}" />
+			</p:column>
+		</p:dataTable>
+
+		<p:toolbar id="toolbar-comunidad">
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file"
+					disabled="#{ComunidadView.disabledButtonNuevo}"
+					actionListener="#{ComunidadView.newComunidad()}" update="@form" />
+
+				<p:commandButton value="Grabar" icon="pi pi-save"
+					disabled="#{ComunidadView.disabledButtonGrabar}"
+					actionListener="#{ComunidadView.saveComunidad()}" update="@form" />
+
+				<p:commandButton value="Cancelar" icon="pi pi-times"
+					disabled="#{ComunidadView.disabledButtonCancelar}"
+					actionListener="#{ComunidadView.saveComunidad()}" update="@form" />
+
+				<p:commandButton value="Editar" icon="pi pi-pencil"
+					disabled="#{ComunidadView.disabledButtonEditar}"
+					actionListener="#{ComunidadView.editComunidad()}" update="@form" />
+
+				<p:commandButton value="Eliminar" icon="pi pi-trash"
+					disabled="#{ComunidadView.disabledButtonEliminar}"
+					actionListener="#{ComunidadView.deleteComunidad()}"
+					update="form-comunidad: table-comunidad: form-comunidad: toolbar-comunidad" />
+
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sí" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
+
+			</f:facet>
+		</p:toolbar>
+
+
+	</h:form>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+		integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+		integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+		crossorigin="anonymous"></script>
+
+</h:body>
+</html>

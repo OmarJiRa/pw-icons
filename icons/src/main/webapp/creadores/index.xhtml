@@ -1,0 +1,180 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de creadores</title>
+	
+	<meta charset="utf-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<link rel="stylesheet"
+		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+		crossorigin="anonymous"></link>
+</h:head>
+
+<h:body>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+		
+		<a class="navbar-brand" href="/iEdunet"><h1 style="color:white">Icons</h1></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarNav" aria-controls="navbarNav"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ml-2">
+				<li class="nav-item"><a class="nav-link h4" href="/icons" style="color:white">Inicio
+				</a></li>
+				<li class="nav-item active"><a class="nav-link h4"
+					href="/icons/usuarios/" style="color:white">Usuarios </a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/creadores/" style="color:white">Creadores</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/posts/" style="color:white">Posts</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/comunidades" style="color:white">Comunidades</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/categorias" style="color:white">Categorias</a></li>
+				<p:commandButton style="text-align:right" value="Register"
+					icon="pi pi-user-plus" />
+				<p:commandButton style="text-align:right" value="Log In"
+					icon="pi pi-id-card" />
+
+			</ul>
+		</div>
+	</nav>
+
+	<h:form id="form-creador" class="row justify-content-center mt-3">
+
+		<p:growl id="growl" life="2000" />
+		<p:panelGrid id="panel-creador" columns="4"
+			style="#{creadorView.stylePanelCreador}">
+			<p:outputLabel for="input-nombresApellidos"
+				value="Nombres y Apellidos :" />
+			<p:inputText id="input-nombresApellidos"
+				value="#{creadorView.creador.nombresApellidos}" />
+			<p:outputLabel for="input-numeroDocumento"
+				value="Número de documento :" />
+			<p:inputText id="input-numeroDocumento"
+				value="#{creadorView.creador.numeroDocumento}" />
+			<p:outputLabel for="input-direccion" value="Dirección :" />
+
+			<p:inputText id="input-direccion"
+				value="#{creadorView.creador.direccion}" />
+
+			<p:outputLabel for="input-telefono" value="Teléfono :" />
+			<p:inputText id="input-telefono"
+				value="#{creadorView.creador.telefono}" />
+			<p:outputLabel for="input-email" value="E-mail :" />
+			<p:inputText id="input-email" value="#{creadorView.creador.email}" />
+
+
+		</p:panelGrid>
+
+		<p:panelGrid id="panel-search" columns="4"
+			style="#{creadorView.styleTableCreador}">
+			<p:outputLabel for="input-search-nombresApellidos"
+				value="Nombres y Apellidos :" />
+			<p:inputText id="input-search-nombresApellidos"
+				value="#{creadorView.creadorSearch.nombresApellidos}" />
+			<p:commandButton value="Buscar" icon="pi pi-search"
+				actionListener="#{creadorView.findByNombresApellidos()}"
+				update=":form-creador:table-creador :form-creador:toolbar-creador" />
+			<p:commandButton value="Limpiar" icon="pi pi-refresh"
+				actionListener="#{creadorView.cleanByNombresApellidos()}"
+				update="@form" />
+
+			<p:outputLabel for="input-search-numeroDocumento"
+				value="Número de documento :" />
+			<p:inputText id="input-search-numeroDocumento"
+				value="#{creadorView.creadorSearch.numeroDocumento}" />
+			<p:commandButton value="Buscar" icon="pi pi-search"
+				actionListener="#{creadorView.findByNumeroDocumento()}"
+				update=":form-creador:table-creador :form-creador:toolbar-creador" />
+			<p:commandButton value="Limpiar" icon="pi pi-refresh"
+				actionListener="#{creadorView.cleanByNumeroDocumento()}"
+				update="@form" />
+		</p:panelGrid>
+
+		<p:dataTable id="table-creador" value="#{creadorView.creadores}"
+			var="creador" paginator="true" rows="5" paginatorPosition="bottom"
+			selectionMode="single" rowKey="#{creador.id}"
+			style="#{creadorView.styleTableCreador}"
+			emptyMessage="No se encontraron creadores">
+
+			<p:ajax event="rowSelect" listener="#{creadorView.selectCreador}"
+				update="@form" />
+			<p:ajax event="rowUnselect" listener="#{creadorView.unselectCreador}"
+				update="@form" />
+
+			<p:column headerText="Id">
+				<h:outputText value="#{creador.id}" />
+			</p:column>
+
+			<p:column headerText="Nombres y Apellidos">
+				<h:outputText value="#{creador.nombresApellidos}" />
+			</p:column>
+
+			<p:column headerText="Correo electrónico">
+				<h:outputText value="#{creador.email}" />
+			</p:column>
+
+			<p:column headerText="Numero de documento">
+				<h:outputText value="#{creador.numeroDocumento}" />
+			</p:column>
+
+			<p:column headerText="Direccion">
+				<h:outputText value="#{creador.direccion}" />
+			</p:column>
+
+			<p:column headerText="Telefono">
+				<h:outputText value="#{creador.telefono}" />
+			</p:column>
+
+		</p:dataTable>
+
+		<p:toolbar id="toolbar-creador">
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file"
+					disabled="#{creadorView.disabledButtonNuevo}"
+					actionListener="#{creadorView.newCreador()}" update="@form" />
+
+				<p:commandButton value="Grabar" icon="pi pi-save"
+					disabled="#{creadorView.disabledButtonGrabar}"
+					actionListener="#{creadorView.saveCreador()}" update="@form" />
+				<p:commandButton value="Cancelar" icon="pi pi-times"
+					disabled="#{creadorView.disabledButtonCancelar}"
+					actionListener="#{creadorView.cancelCreador()}" update="@form" />
+
+				<p:commandButton value="Editar" icon="pi pi-pencil"
+					disabled="#{creadorView.disabledButtonEditar}"
+					actionListener="#{creadorView.editCreador()}" update="@form" />
+
+				<p:commandButton value="Eliminar" icon="pi pi-trash"
+					disabled="#{creadorView.disabledButtonEliminar}"
+					actionListener="#{creadorView.deleteCreador()}"
+					update=":form-creador:table-creador :form-creador:toolbar-creador">
+					<p:confirm header="Confirmación"
+						message="Estas seguro que deseas elimininar a: #{creadorView.messageConfirmDialog}?"
+						icon="pi pi-exclamation-triangle" />
+				</p:commandButton>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
+
+
+			</f:facet>
+		</p:toolbar>
+
+	</h:form>
+
+</h:body>
+</html>

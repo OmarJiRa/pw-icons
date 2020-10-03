@@ -1,0 +1,160 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de categorias</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<link rel="stylesheet"
+		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+		crossorigin="anonymous"></link>
+</h:head>
+
+
+
+<h:body class="bg-light">
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+
+		<a class="navbar-brand" href="/iEdunet"><h1 style="color: white">Icons</h1></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarNav" aria-controls="navbarNav"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ml-2">
+				<li class="nav-item"><a class="nav-link h4" href="/icons"
+					style="color: white">Inicio </a></li>
+				<li class="nav-item active"><a class="nav-link h4"
+					href="/icons/categorias/" style="color: white">Usuarios </a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/creadores/" style="color: white">Creadores</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/posts/" style="color: white">Posts</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/comunidades" style="color: white">Comunidades</a></li>
+				<li class="nav-item"><a class="nav-link h4"
+					href="/icons/categorias" style="color: white">Categorias</a></li>
+
+				<p:commandButton style="text-align:right" value="Register"
+					icon="pi pi-user-plus" />
+				<p:commandButton style="text-align:right" value="Log In"
+					icon="pi pi-id-card" />
+
+			</ul>
+		</div>
+	</nav>
+
+	<h:form id="form-categoria" class="row justify-content-center mt-3">
+
+		<p:growl id="growl" life="2000" />
+		<p:panelGrid id="panel-categoria" columns="4"
+			style="#{categoriaView.stylePanelCategoria}">
+			<p:outputLabel for="input-nombresApellidos" value="Nombre :" />
+			<p:inputText id="input-nombresApellidos"
+				value="#{categoriaView.categoria.nombre}" />
+			<p:outputLabel for="input-descripcion" value="Descripcion :" />
+			<p:inputText id="input-descripcion"
+				value="#{categoriaView.categoria.descripcion}" />
+
+
+
+		</p:panelGrid>
+
+		<p:panelGrid id="panel-search" columns="4"
+			style="#{categoriaView.styleTableCategoria}">
+			<p:outputLabel for="input-search-nombre" value="Nombre :" />
+			<p:inputText id="input-search-nombre"
+				value="#{categoriaView.categoriaSearch.nombre}" />
+			<p:commandButton value="Buscar" icon="pi pi-search"
+				actionListener="#{categoriaView.findByNombre()}"
+				update=":form-categoria:table-categoria :form-categoria:toolbar-categoria" />
+			<p:commandButton value="Limpiar" icon="pi pi-refresh"
+				actionListener="#{categoriaView.cleanByNombres()}" update="@form" />
+
+		</p:panelGrid>
+
+		<p:dataTable id="table-categoria" var="categoria"
+			value="#{categoriaView.categorias}" paginator="true" rows="5"
+			paginatorPosition="bottom" selectionMode="single"
+			rowKey="#{categoria.id}" style="#{categoriaView.styleTableCategoria}"
+			emptyMessage="No se encontraron categorías">
+			
+			<p:ajax event="rowSelect" listener="#{categoriaView.selectCategoria}" update="@form" />
+			<p:ajax event="rowUnselect" listener="#{categoriaView.unselectCategoria}" update="@form"  />
+
+			<p:column headerText="Id">
+				<h:outputText value="#{categoria.id}" />
+			</p:column>
+
+			<p:column headerText="Nombre">
+				<h:outputText value="#{categoria.nombre}" />
+			</p:column>
+
+			<p:column headerText="Descripción">
+				<h:outputText value="#{categoria.descripcion}" />
+			</p:column>
+
+
+		</p:dataTable>
+		
+		<p:toolbar id="toolbar-categoria">
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file"
+					disabled="#{categoriaView.disabledButtonNuevo}"
+					actionListener="#{categoriaView.newCategoria()}" update="@form" />
+
+				<p:commandButton value="Grabar" icon="pi pi-save"
+					disabled="#{categoriaView.disabledButtonGrabar}"
+					actionListener="#{categoriaView.saveCategoria()}" update="@form" />
+				<p:commandButton value="Cancelar" icon="pi pi-times"
+					disabled="#{categoriaView.disabledButtonCancelar}"
+					actionListener="#{categoriaView.cancelCategoria()}" update="@form" />
+
+				<p:commandButton value="Editar" icon="pi pi-pencil"
+					disabled="#{categoriaView.disabledButtonEditar}"
+					actionListener="#{categoriaView.editCategoria()}" update="@form" />
+
+				<p:commandButton value="Eliminar" icon="pi pi-trash"
+					disabled="#{categoriaView.disabledButtonEliminar}"
+					actionListener="#{categoriaView.deleteCategoria()}"
+					update=":form-categoria:table-categoria :form-categoria:toolbar-categoria">
+					<p:confirm header="Confirmación"
+						message="Estas seguro que deseas elimininar a: #{categoriaView.messageConfirmDialog}?"
+						icon="pi pi-exclamation-triangle" />
+				</p:commandButton>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
+
+
+			</f:facet>
+		</p:toolbar>
+
+
+	</h:form>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+		integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+		integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+		crossorigin="anonymous"></script>
+
+</h:body>
+</html>
